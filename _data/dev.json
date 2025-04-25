@@ -1,0 +1,55 @@
+[
+  {
+    "name": "Backend Pro",
+    "description": "It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).",
+    "website": "https://www.lipsum.com/",
+    "phone": "8247714669",
+    "email": "abc@gmail.com",
+    "address": "14/258, Kannavarithota, Guntur, AP 522001",
+    "careers": ["Web Development", "Mobile Development", "Other"],
+    "housing": true,
+    "jobAssistance": true,
+    "jobGuarantee": false,
+    "acceptGi": true
+  },
+
+  {
+    "name": "Code Academy",
+    "description": "An online platform offering comprehensive web and mobile development courses.",
+    "website": "https://www.codeacademy.com",
+    "phone": "9876543210",
+    "email": "contact@codeacademy.com",
+    "address": "123 Code Street, Tech City, India",
+    "careers": ["Web Development", "Mobile Development", "UI/UX"],
+    "housing": true,
+    "jobAssistance": true,
+    "jobGuarantee": false,
+    "acceptGi": false
+  },
+  {
+    "name": "DevLaunch Institute",
+    "description": "DevLaunch helps students get started in the tech world with structured training and mentorship.",
+    "website": "https://www.devlaunch.org",
+    "phone": "9123456789",
+    "email": "info@devlaunch.org",
+    "address": "456 Dev Road, Bangalore, India",
+    "careers": ["Data Science", "Business"],
+    "housing": false,
+    "jobAssistance": true,
+    "jobGuarantee": true,
+    "acceptGi": true
+  },
+  {
+    "name": "SkillBoosters",
+    "description": "SkillBoosters provides short-term certification courses for IT and non-IT professionals.",
+    "website": "http://www.skillboosters.in",
+    "phone": "9988776655",
+    "email": "support@skillboosters.in",
+    "address": "789 Training Lane, Hyderabad, India",
+    "careers": ["Web Development", "Other"],
+    "housing": false,
+    "jobAssistance": false,
+    "jobGuarantee": false,
+    "acceptGi": true
+  }
+]
