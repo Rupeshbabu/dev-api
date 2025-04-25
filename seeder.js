@@ -23,7 +23,7 @@ const dev = JSON.parse(fs.readFileSync(`${__dirname}/_data/dev.json`, 'utf-8'));
 const importData = async() => {
     try {        
         await Dev.create(dev);
-        console.log("Data imported...".green.inverse);
+        console.log("Data imported...".green.bold.inverse);
         process.exit();
     } catch (error) {
         console.error(error);
@@ -34,7 +34,7 @@ const importData = async() => {
 const deleteData = async() => {
     try {
         await Dev.deleteMany();
-        console.log("Data deleted...".red.inverse);
+        console.log("Data deleted...".red.bold.inverse);
         process.exit();
     } catch (error) {
         console.error(error);

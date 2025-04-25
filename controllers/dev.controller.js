@@ -1,6 +1,7 @@
 const ErrorResponse = require("../utils/errorResponse");
 const Dev = require("../models/dev.model");
 const asyncHandler = require("../middleware/async");
+const geocoder = require('../utils/geoCoder');
 
 //@dec Get All Dev
 //@route GET /api/v1/dev
@@ -67,3 +68,31 @@ exports.deleteDev = asyncHandler(async (req, res, next) => {
     data: {},
   });
 });
+
+
+//@dec Get dev with in radius Dev
+//@route DELETE /api/v1/dev/radius/:zipcode/:distance
+//@access Private
+exports.getDevInRadius = asyncHandler(async (req, res, next) => {
+   const {zipcode, distance} = req.params;
+
+   //Get lat/lng from geocoder
+    const loc = await geocoder.geocode(zipcode);
+    const lat = loc[0].latitude;
+    const lng = loc[0].longitude;
+
+    // Calc radius using radius
+    // Divide distance by radius of Earth
+    // Earth Radius = 3,963 mi / 6,378 km
+    const radius = distance / 3963
+
+    const dev = await Dev.find({
+        location: { $geoWithin: { $centerSphere: [ [lng, lat],  radius ] } }
+    });
+
+    return res.status(200).json({
+        success: true,
+        count: dev.length,
+        data: dev
+    })
+  });
