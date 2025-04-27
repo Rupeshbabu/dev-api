@@ -37,8 +37,7 @@ exports.getCourseDetails = asyncHandler(async (req, res, next) => {
 
   if (!course) {
     return next(
-      new ErrorResponse(`no Course with the id of ${req.params.id}`),
-      404
+      new ErrorResponse(`no Course with the id of ${req.params.id}`, 404),
     );
   }
 
@@ -55,8 +54,7 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
   const dev = await Dev.findById(req.params.devId);
   if (!dev) {
     return next(
-      new ErrorResponse(`No Dev with the id ${req.params.devId}`),
-      404
+      new ErrorResponse(`No Dev with the id ${req.params.devId}`, 404),
     );
   }
 
@@ -73,8 +71,7 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
   let course = await Course.findById(req.params.devId);
   if (!course) {
     return next(
-      new ErrorResponse(`No Course with the id ${req.params.id}`),
-      404
+      new ErrorResponse(`No Course with the id ${req.params.id}`, 404),
     );
   }
 
@@ -93,8 +90,7 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
   const course = await Course.findById(req.params.devId);
   if (!course) {
     return next(
-      new ErrorResponse(`No Course with the id ${req.params.id}`),
-      404
+      new ErrorResponse(`No Course with the id ${req.params.id}`, 404)
     );
   }
   await Course.removeAllListeners();

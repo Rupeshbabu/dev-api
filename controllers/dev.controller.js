@@ -1,3 +1,4 @@
+const path = require('path');
 const ErrorResponse = require("../utils/errorResponse");
 const Dev = require("../models/dev.model");
 const asyncHandler = require("../middleware/async");
@@ -22,7 +23,7 @@ exports.getDev = asyncHandler(async (req, res, next) => {
   // Create query string
   let queryStr = JSON.stringify(req.query);
 
-  // Crea6te operators ($gt, $gte, etc)
+  // Create operators ($gt, $gte, etc)
   queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
 
   // Finding resources
@@ -162,3 +163,47 @@ exports.getDevInRadius = asyncHandler(async (req, res, next) => {
         data: dev
     })
   });
+
+  // Upload Photo for dev
+  exports.devPhotoUpoad = asyncHandler(async(req, res, next) => {
+    const dev = await Dev.findById(req.params.id);
+
+    if(!dev){
+      return next(new ErrorResponse(`dev not found with id of ${req.params.id}`, 404));
+    }
+
+    if(!req.files) {
+      return next(new ErrorResponse(`Please upload a file`,400));
+    }
+
+    const file = req.files.file
+
+    //Make sure the image is a photo
+    if(!file.mimetype.startsWith('image')){
+      return next(new ErrorResponse(`Please upload a image file`, 400));
+    }
+
+    // Check file size
+    if(file.size > process.env.MAX_FILE_UPLOAD){
+      return next(new ErrorResponse(`Please upload an image less than ${process.env.MAX_FILE_UPLOAD}`, 400));
+    }
+
+    // Create custom filname
+    file.name = `photo_${dev._id}${path.parse(file.name).ext}`;
+
+    file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err =>{
+      if(err){
+        console.error(err);
+        return next(new ErrorResponse(`Problem with file upload`, 500));
+      }
+
+      await Dev.findByIdAndUpdate(req.params.id, {photo: file.name});
+
+      return res.status(200).json({
+        success: true,
+        data: file.name
+      })
+    })
+
+    
+  })

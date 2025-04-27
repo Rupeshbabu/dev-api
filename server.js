@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
+const path = require('path');
+const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errors');
 // Load env vars
@@ -26,6 +28,12 @@ if(process.env.NODE_ENV === 'development'){
 
 //Body parser
 app.use(express.json());
+
+//File Upload
+app.use(fileUpload());
+
+// Set Static folder
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/dev', devRoutes);
 app.use('/api/v1/coursea', courseRoute);
