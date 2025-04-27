@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/errors');
 dotenv.config({path:'./config/config.env'});
 
 const devRoutes = require('./routes/dev.route');
+const courseRoute = require('./routes/course.route');
 // const logger = require('./middleware/logger.middleware');
 const morgan = require('morgan'); //3rd party middleware
 
@@ -27,6 +28,7 @@ if(process.env.NODE_ENV === 'development'){
 app.use(express.json());
 
 app.use('/api/v1/dev', devRoutes);
+app.use('/api/v1/coursea', courseRoute);
 
 // we need to decalre after routing paths
 app.use(errorHandler);

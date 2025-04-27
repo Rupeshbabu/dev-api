@@ -95,6 +95,9 @@ const DevSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+}, {
+  toJSON: {virtuals: true},
+  toObject: {virtuals: true}
 });
 
 //Create dev slug from the name
@@ -122,5 +125,19 @@ DevSchema.pre("save", async function (next) {
   this.address = undefined;
   next();
 });
+
+// Cascade delete courses when a dev is deleted
+DevSchema.pre('remove', async function(next){
+  await this.model('Course').deleteMany({ dev:this._id });
+  next();
+});
+
+// Reverese Populate with virtuals
+DevSchema.virtual('courses', {
+  ref:'Course',
+  localField: '_id',
+  foreignField:'dev',
+  justOne: false
+})
 
 module.exports = mongoose.model("Dev", DevSchema);

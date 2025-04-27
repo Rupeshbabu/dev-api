@@ -7,10 +7,74 @@ const geocoder = require('../utils/geoCoder');
 //@route GET /api/v1/dev
 //@access Public
 exports.getDev = asyncHandler(async (req, res, next) => {
-  const getDevList = await Dev.find();
+  
+  let query;
+
+  //Copy req.query
+  const reqQuery = { ...req.query };
+
+  //Fields to exclude
+  const removeFields = ['select', 'sort', 'page', 'limit'];
+  
+  // Loop over removefields and delete them from reqQuery
+  removeFields.forEach(params => delete reqQuery[params]);
+
+  // Create query string
+  let queryStr = JSON.stringify(req.query);
+
+  // Crea6te operators ($gt, $gte, etc)
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+
+  // Finding resources
+  query = Dev.find(JSON.parse(queryStr)).populate('courses');
+
+  // SELECT FIELDS
+  if(req.query.select){
+    const fields = req.query.select.split(',').join(' ');
+    query = query.select(fields);
+  }
+
+  // Sort
+
+  if(req.query.sort){
+    const sortBy = req.query.sort.split(',').join(' ');
+    query = query.sort(sortBy);
+  }else {
+    query = query.sort('-createdAt')
+  }
+
+  //Paginaton
+  const page = parseInt(req.query.page, 2) || 1;
+  const limit = parseInt(req.query.limit, 2) || 100;
+  const startIndex = (page-1)*limit;
+  const endIndex = page * limit
+  const total = await Dev.countDocuments();
+
+  query = query.skip(startIndex).limit(limit);
+
+  // Executing query
+  const getDevList = await query;
+
+  // Paginaton result
+  const pagination = {};
+  if(endIndex < total){
+    pagination.next = {
+      page: page + 1,
+      limit
+    }
+  }
+
+  if(startIndex > 0) {
+    pagination.pre ={
+      page: page - 1,
+      limit
+    }
+  }
+
+
   return res
     .status(200)
-    .json({ succes: true, count: getDevList.length, data: getDevList });
+    .json({ succes: true, count: getDevList.length, pagination, data: getDevList });
 });
 
 //@dec Get Single Dev
@@ -57,12 +121,14 @@ exports.updateDev = asyncHandler(async (req, res, next) => {
 //@route DELETE /api/v1/dev/:id
 //@access Private
 exports.deleteDev = asyncHandler(async (req, res, next) => {
-  const deletedDev = await Dev.findByIdAndDelete(req.params.id);
+  const deletedDev = await Dev.findById(req.params.id);
   if (!deletedDev) {
     return next(
       new ErrorResponse(`Dev not found with id of ${req.params.id}`, 404)
     );
   }
+
+  deletedDev.remove();
   return res.status(200).json({
     success: true,
     data: {},

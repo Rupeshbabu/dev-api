@@ -10,7 +10,8 @@
     "housing": true,
     "jobAssistance": true,
     "jobGuarantee": false,
-    "acceptGi": true
+    "acceptGi": true,
+    "averageCost":10000
   },
 
   {
@@ -24,7 +25,9 @@
     "housing": true,
     "jobAssistance": true,
     "jobGuarantee": false,
-    "acceptGi": false
+    "acceptGi": false,
+    "averageCost":5000
+
   },
   {
     "name": "DevLaunch Institute",
@@ -37,7 +40,9 @@
     "housing": false,
     "jobAssistance": true,
     "jobGuarantee": true,
-    "acceptGi": true
+    "acceptGi": true,
+    "averageCost":100
+
   },
   {
     "name": "SkillBoosters",
@@ -50,6 +55,8 @@
     "housing": false,
     "jobAssistance": false,
     "jobGuarantee": false,
-    "acceptGi": true
+    "acceptGi": true,
+    "averageCost":12000
+
   }
 ]
