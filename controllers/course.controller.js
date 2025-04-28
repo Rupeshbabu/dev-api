@@ -8,24 +8,19 @@ const Dev = require("../models/dev.model");
 // @route   GET /api/v1/dev/:devId/course
 // @access  Public
 exports.getCourses = asyncHandler(async (req, res, next) => {
-  let query;
 
   if (req.params.devId) {
-    query = Course.find({ dev: req.params.devId });
+    const courses = await Course.find({ dev: req.params.devId });
+    return res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses
+    })
   } else {
-    query = Course.find().populate({
-      path: "dev",
-      select: "name description",
-    });
+    return res.status(200).json(res.advanceResult);
   }
 
-  const courses = await query;
-
-  return res.send(200).json({
-    success: true,
-    count: courses.length,
-    data: courses,
-  });
+  
 });
 
 // Single Course

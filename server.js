@@ -10,6 +10,7 @@ dotenv.config({path:'./config/config.env'});
 
 const devRoutes = require('./routes/dev.route');
 const courseRoute = require('./routes/course.route');
+const authRoute = require('./routes/auth.route');
 // const logger = require('./middleware/logger.middleware');
 const morgan = require('morgan'); //3rd party middleware
 
@@ -36,7 +37,8 @@ app.use(fileUpload());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/v1/dev', devRoutes);
-app.use('/api/v1/coursea', courseRoute);
+app.use('/api/v1/courses', courseRoute);
+app.use('/api/v1/auth', authRoute);
 
 // we need to decalre after routing paths
 app.use(errorHandler);
