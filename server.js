@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const path = require('path');
+const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errors');
@@ -35,6 +36,9 @@ app.use(fileUpload());
 
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Cookie Parser
+app.use(cookieParser());
 
 app.use('/api/v1/dev', devRoutes);
 app.use('/api/v1/courses', courseRoute);
