@@ -29,7 +29,19 @@ exports.getDevDetails = asyncHandler(async (req, res, next) => {
 //@route POST /api/v1/dev
 //@access Private
 exports.postDev = asyncHandler(async (req, res, next) => {
+
+  //Add user to req.body
+  req.body.user = req.user.id;
   const devCreate = await Dev.create(req.body);
+
+  // Check for published dev
+  const publishedDev = await Dev.findOne({user: req.user.id});
+  
+  // if user is not an admin, they can only add one dev
+  if(publishedDev && req.user.role !== 'admin') {
+    return next(new ErrorResponse(`User with id ${req.user.id} has already published a Dev`, 400));
+  }
+
   return res.status(201).json({ succes: true, data: devCreate });
 });
 
@@ -46,6 +58,17 @@ exports.updateDev = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`Dev not found with id of ${req.params.id}`, 404)
     );
   }
+
+  //Make sure user is dev owner
+  if(updatedDev.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse(`User ${req.params.id} is not authorized to update this dev`, 401))
+  }
+
+  updatedDev = await Dev.findOneAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
   return res.status(200).json({
     success: true,
     data: updatedDev,
@@ -61,6 +84,11 @@ exports.deleteDev = asyncHandler(async (req, res, next) => {
     return next(
       new ErrorResponse(`Dev not found with id of ${req.params.id}`, 404)
     );
+  }
+
+  //Make sure user is dev owner
+  if(deletedDev.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse(`User ${req.params.id} is not authorized to update this dev`, 401))
   }
 
   deletedDev.remove();
@@ -106,6 +134,12 @@ exports.devPhotoUpoad = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`dev not found with id of ${req.params.id}`, 404)
     );
   }
+  
+   //Make sure user is dev owner
+   if(dev.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse(`User ${req.params.id} is not authorized to update this dev`, 401))
+  }
+
 
   if (!req.files) {
     return next(new ErrorResponse(`Please upload a file`, 400));

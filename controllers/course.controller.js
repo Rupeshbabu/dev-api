@@ -45,6 +45,7 @@ exports.getCourseDetails = asyncHandler(async (req, res, next) => {
 // Add course
 exports.addCourse = asyncHandler(async (req, res, next) => {
   req.body.dev = req.params.devId;
+  req.body.user = req.user.id;
 
   const dev = await Dev.findById(req.params.devId);
   if (!dev) {
@@ -52,6 +53,12 @@ exports.addCourse = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`No Dev with the id ${req.params.devId}`, 404),
     );
   }
+
+   //Make sure user is dev owner
+   if(dev.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse(`User ${req.user.id} is not authorized to add a course to dev ${dev._id}`, 401))
+  }
+
 
   const course = await Course.create(req.body);
 
@@ -70,6 +77,10 @@ exports.updateCourse = asyncHandler(async (req, res, next) => {
     );
   }
 
+ //Make sure user is course owner
+ if(course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  return next(new ErrorResponse(`User ${req.user.id} is not authorized to update a course  ${course._id}`, 401))
+}
   course = await Course.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
     runValidators: true,
@@ -88,6 +99,10 @@ exports.deleteCourse = asyncHandler(async (req, res, next) => {
       new ErrorResponse(`No Course with the id ${req.params.id}`, 404)
     );
   }
+   //Make sure user is course owner
+ if(course.user.toString() !== req.user.id && req.user.role !== 'admin') {
+  return next(new ErrorResponse(`User ${req.user.id} is not authorized to delete a course  ${course._id}`, 401))
+}
   await Course.removeAllListeners();
   return res.status(200).json({
     success: true,

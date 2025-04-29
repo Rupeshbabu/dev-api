@@ -33,3 +33,14 @@ exports.protect = asyncHandler(async (req, res, next) => {
     console.log(error);
   }
 });
+
+
+// Grant access tp specific roles
+exports.authorize = (...roles) => {
+  return (req,res,next) => {
+    if(!roles.includes(req.user.role)){
+      return next(new ErrorRespose(`User role ${req.user.role} is not authorized to access this route`, 403));
+    }
+    next();
+  }
+}
