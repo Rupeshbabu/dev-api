@@ -10,9 +10,12 @@ const { protect, authorize } = require('../middleware/auth');
 //Include other resourses router
 
 const courseRouter = require('../routes/course.route');
+const reviewRouter = require('../routes/review.route');
 
 // Re-route into other resourse routes
-router.use('/:dev/courses', courseRouter);
+router.use('/:devId/courses', courseRouter);
+router.use('/:devId/review', reviewRouter);
+
 
 router.route('/').get(advanceResult(Dev, 'courses'), getDev).post(protect, authorize('publisher', 'admin'), postDev);
 router.route('/:id').get(getDevDetails).put(protect, authorize('publisher', 'admin'), updateDev).delete(protect, authorize('publisher', 'admin'),  deleteDev);

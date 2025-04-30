@@ -11,6 +11,7 @@ dotenv.config({path: './config/config.env'});
 const Dev = require('./models/dev.model');
 const Course = require('./models/course.model');
 const User = require("./models/user.model");
+const Review = require('./models/review.model');
 
 
 //Connect DB
@@ -23,6 +24,8 @@ mongoose.connect(process.env.MONGO_URI, {
 const dev = JSON.parse(fs.readFileSync(`${__dirname}/_data/dev.json`, 'utf-8'));
 const course = JSON.parse(fs.readFileSync(`${__dirname}/_data/course.json`, 'utf-8'));
 const users = JSON.parse(fs.readFileSync(`${__dirname}/_data/user.json`, 'utf-8'));
+const review = JSON.parse(fs.readFileSync(`${__dirname}/_data/review.json`, 'utf-8'));
+
 
 
 
@@ -32,6 +35,7 @@ const importData = async() => {
         await Dev.create(dev);
         await Course.create(course);
         await User.create(users);
+        await Review.create(review);
         console.log("Data imported...".green.inverse);
         process.exit();
     } catch (error) {
@@ -45,6 +49,7 @@ const deleteData = async() => {
         await Dev.deleteMany();
         await Course.deleteMany();
         await User.deleteMany();
+        await Review.deleteMany();
         console.log("Data deleted...".red.inverse);
         process.exit();
     } catch (error) {

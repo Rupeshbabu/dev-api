@@ -12,6 +12,8 @@ dotenv.config({path:'./config/config.env'});
 const devRoutes = require('./routes/dev.route');
 const courseRoute = require('./routes/course.route');
 const authRoute = require('./routes/auth.route');
+const userRoute = require('./routes/user.route');
+const reviewRoute = require('./routes/review.route');
 // const logger = require('./middleware/logger.middleware');
 const morgan = require('morgan'); //3rd party middleware
 
@@ -43,6 +45,8 @@ app.use(cookieParser());
 app.use('/api/v1/dev', devRoutes);
 app.use('/api/v1/courses', courseRoute);
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/user', userRoute);
+app.use('/api/v1/review', reviewRoute);
 
 // we need to decalre after routing paths
 app.use(errorHandler);
