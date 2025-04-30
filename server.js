@@ -7,6 +7,7 @@ const fileUpload = require('express-fileupload');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errors');
 const monogoSanitize = require('express-mongo-sanitize');
+const helmet = require('helmet');
 // Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -39,6 +40,9 @@ app.use(fileUpload());
 
 //Sanitize Data
 app.use(monogoSanitize());
+
+// Set Security headers
+app.use(helmet());
 
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
