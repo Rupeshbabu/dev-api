@@ -9,6 +9,10 @@ const errorHandler = require('./middleware/errors');
 const monogoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
 const xssClean = require('xss-clean');
+const expressLimit = require('express-rate-limit');
+const hpp = require('hpp');
+const cors = require('cors');
+
 // Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -46,7 +50,21 @@ app.use(monogoSanitize());
 app.use(helmet());
 
 // Prevent XSS attacks
-ap.use(xssClean());
+app.use(xssClean());
+
+//limit api per 
+const limiter = expressLimit.rateLimit({
+    windowMs: 10 * 60 * 1000,  // 10min
+    max: 100
+});
+
+app.use(limiter);
+
+//Prevent httpparams pollution
+app.use(hpp());
+
+// Enable CORS
+app.use(cors());
 
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
