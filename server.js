@@ -8,6 +8,7 @@ const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errors');
 const monogoSanitize = require('express-mongo-sanitize');
 const helmet = require('helmet');
+const xssClean = require('xss-clean');
 // Load env vars
 dotenv.config({path:'./config/config.env'});
 
@@ -43,6 +44,9 @@ app.use(monogoSanitize());
 
 // Set Security headers
 app.use(helmet());
+
+// Prevent XSS attacks
+ap.use(xssClean());
 
 // Set Static folder
 app.use(express.static(path.join(__dirname, 'public')));
